@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 const Header = () => {
   return (
-    <header className="sticky top-0 z-10 bg-white shadow-md">
+    <header className="sticky top-0 z-10 bg-secondary shadow-md">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center">
           <Link to="/" className="flex items-center gap-2">
@@ -17,7 +17,7 @@ const Header = () => {
             to="/"
             className={({isActive}) => cn(
               "text-sm font-medium transition-colors hover:text-team-primary",
-              isActive ? "text-team-primary" : "text-gray-700"
+              isActive ? "text-team-primary" : "text-foreground/80"
             )}
             end
           >
@@ -27,7 +27,7 @@ const Header = () => {
             to="/add-member"
             className={({isActive}) => cn(
               "text-sm font-medium transition-colors hover:text-team-primary",
-              isActive ? "text-team-primary" : "text-gray-700"
+              isActive ? "text-team-primary" : "text-foreground/80"
             )}
           >
             Add Member
@@ -36,7 +36,7 @@ const Header = () => {
             to="/view-members"
             className={({isActive}) => cn(
               "text-sm font-medium transition-colors hover:text-team-primary",
-              isActive ? "text-team-primary" : "text-gray-700"
+              isActive ? "text-team-primary" : "text-foreground/80"
             )}
           >
             View Members
@@ -50,7 +50,7 @@ const Header = () => {
               to="/"
               className={({isActive}) => cn(
                 "p-1",
-                isActive ? "text-team-primary" : "text-gray-700"
+                isActive ? "text-team-primary" : "text-foreground/80"
               )}
               end
             >
@@ -60,7 +60,7 @@ const Header = () => {
               to="/add-member"
               className={({isActive}) => cn(
                 "p-1",
-                isActive ? "text-team-primary" : "text-gray-700"
+                isActive ? "text-team-primary" : "text-foreground/80"
               )}
             >
               Add
@@ -69,7 +69,7 @@ const Header = () => {
               to="/view-members"
               className={({isActive}) => cn(
                 "p-1",
-                isActive ? "text-team-primary" : "text-gray-700"
+                isActive ? "text-team-primary" : "text-foreground/80"
               )}
             >
               Members

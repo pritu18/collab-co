@@ -64,9 +64,9 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				team: {
-					primary: '#9b87f5',
-					secondary: '#7E69AB',
-					light: '#E5DEFF',
+					primary: '#a78bfa', // Adjusted for dark theme
+					secondary: '#9d8cbc', // Adjusted for dark theme
+					light: '#473a7d',    // Adjusted for dark theme 
 				}
 			},
 			borderRadius: {

@@ -15,34 +15,43 @@ export interface Member {
   details?: string;
 }
 
+// Configure axios with defaults for better error handling
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
 // API calls for members
 export const membersApi = {
   // Get all members
   getAllMembers: async (): Promise<Member[]> => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/members`);
+      const response = await apiClient.get('/members');
       return response.data;
     } catch (error) {
       console.error("Error fetching members:", error);
-      return [];
+      throw error; // Re-throw for proper error handling in components
     }
   },
 
   // Get member by ID
   getMemberById: async (id: string): Promise<Member | null> => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/members/${id}`);
+      const response = await apiClient.get(`/members/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching member with ID ${id}:`, error);
-      return null;
+      throw error; // Re-throw for proper error handling in components
     }
   },
 
   // Add a new member
   addMember: async (memberData: FormData): Promise<Member | null> => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/members`, memberData, {
+      const response = await apiClient.post('/members', memberData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -50,7 +59,7 @@ export const membersApi = {
       return response.data;
     } catch (error) {
       console.error("Error adding member:", error);
-      return null;
+      throw error; // Re-throw for proper error handling in components
     }
   }
 };
