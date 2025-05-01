@@ -8,15 +8,15 @@ const Header = () => {
     <header className="sticky top-0 z-10 bg-secondary shadow-md">
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         <div className="flex items-center">
-          <Link to="/" className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-team-primary">STUDENT TEAM ORBIT</h1>
+          <Link to="/" className="flex items-center gap-2 transition-transform hover:scale-105 duration-300">
+            <h1 className="text-xl font-bold text-team-primary">COLLAB CO.</h1>
           </Link>
         </div>
         <nav className="hidden md:flex items-center space-x-6">
           <NavLink 
             to="/"
             className={({isActive}) => cn(
-              "text-sm font-medium transition-colors hover:text-team-primary",
+              "text-sm font-medium transition-colors hover:text-team-primary duration-300",
               isActive ? "text-team-primary" : "text-foreground/80"
             )}
             end
@@ -26,7 +26,7 @@ const Header = () => {
           <NavLink 
             to="/add-member"
             className={({isActive}) => cn(
-              "text-sm font-medium transition-colors hover:text-team-primary",
+              "text-sm font-medium transition-colors hover:text-team-primary duration-300",
               isActive ? "text-team-primary" : "text-foreground/80"
             )}
           >
@@ -35,7 +35,7 @@ const Header = () => {
           <NavLink 
             to="/view-members"
             className={({isActive}) => cn(
-              "text-sm font-medium transition-colors hover:text-team-primary",
+              "text-sm font-medium transition-colors hover:text-team-primary duration-300",
               isActive ? "text-team-primary" : "text-foreground/80"
             )}
           >
@@ -49,7 +49,7 @@ const Header = () => {
             <NavLink 
               to="/"
               className={({isActive}) => cn(
-                "p-1",
+                "p-1 transition-colors duration-300",
                 isActive ? "text-team-primary" : "text-foreground/80"
               )}
               end
@@ -59,7 +59,7 @@ const Header = () => {
             <NavLink 
               to="/add-member"
               className={({isActive}) => cn(
-                "p-1",
+                "p-1 transition-colors duration-300",
                 isActive ? "text-team-primary" : "text-foreground/80"
               )}
             >
@@ -68,7 +68,7 @@ const Header = () => {
             <NavLink 
               to="/view-members"
               className={({isActive}) => cn(
-                "p-1",
+                "p-1 transition-colors duration-300",
                 isActive ? "text-team-primary" : "text-foreground/80"
               )}
             >

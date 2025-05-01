@@ -19,12 +19,12 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
   const memberId = member._id || member.id;
 
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-md flex flex-col">
-      <div className="aspect-square overflow-hidden bg-gray-100">
+    <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-team-primary/20 flex flex-col transform hover:-translate-y-1">
+      <div className="aspect-square overflow-hidden bg-gray-800">
         <img 
           src={imageUrl} 
           alt={`${member.name}'s profile`} 
-          className="w-full h-full object-cover transition-transform hover:scale-105"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
           onError={(e) => {
             // Fallback to placeholder on error
             const target = e.target as HTMLImageElement;
@@ -33,12 +33,12 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
         />
       </div>
       <CardContent className="pt-4 flex-grow">
-        <h3 className="font-semibold text-lg text-gray-800 truncate">{member.name}</h3>
-        <p className="text-sm text-team-secondary truncate">{member.role}</p>
+        <h3 className="font-semibold text-lg text-white truncate">{member.name}</h3>
+        <p className="text-sm text-team-primary truncate">{member.role}</p>
       </CardContent>
       <CardFooter className="pt-0 pb-4">
         <Link to={`/member/${memberId}`} className="w-full">
-          <Button variant="outline" className="w-full border-team-primary text-team-primary hover:bg-team-light hover:text-team-secondary">
+          <Button variant="outline" className="w-full border-team-primary text-team-primary hover:bg-team-light hover:text-background transition-all duration-300">
             View Details
           </Button>
         </Link>

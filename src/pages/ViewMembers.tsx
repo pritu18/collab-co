@@ -35,7 +35,7 @@ const ViewMembersPage = () => {
   // Loading skeletons
   const renderSkeletons = () => {
     return Array(6).fill(0).map((_, index) => (
-      <div key={index} className="flex flex-col">
+      <div key={index} className="flex flex-col animate-pulse">
         <Skeleton className="aspect-square w-full" />
         <Skeleton className="h-6 w-4/5 mt-4" />
         <Skeleton className="h-4 w-3/5 mt-2" />
@@ -45,10 +45,10 @@ const ViewMembersPage = () => {
   };
   
   return (
-    <div>
+    <div className="animate-fade-in">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Team Members</h1>
-        <p className="text-gray-600">
+        <h1 className="text-3xl font-bold text-white mb-2">Team Members</h1>
+        <p className="text-gray-300">
           {loading ? 'Loading team members...' : 
            error ? error : 
            `Showing ${members.length} team member${members.length !== 1 ? 's' : ''}`}
@@ -60,21 +60,23 @@ const ViewMembersPage = () => {
           {renderSkeletons()}
         </div>
       ) : error ? (
-        <div className="text-center p-8 bg-red-50 rounded-lg">
-          <p className="text-red-600">{error}</p>
+        <div className="text-center p-8 bg-red-900/30 rounded-lg animate-fade-in">
+          <p className="text-red-400">{error}</p>
         </div>
       ) : members.length === 0 ? (
-        <div className="text-center p-8 bg-gray-50 rounded-lg">
-          <h3 className="text-xl font-medium text-gray-700 mb-2">No team members found</h3>
-          <p className="text-gray-600 mb-4">Start by adding a new team member.</p>
-          <a href="/add-member" className="text-team-primary hover:text-team-secondary font-medium">
+        <div className="text-center p-8 bg-gray-800/50 rounded-lg animate-fade-in">
+          <h3 className="text-xl font-medium text-white mb-2">No team members found</h3>
+          <p className="text-gray-300 mb-4">Start by adding a new team member.</p>
+          <a href="/add-member" className="text-team-primary hover:text-team-secondary transition-colors duration-300 font-medium">
             Add your first team member
           </a>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {members.map((member) => (
-            <MemberCard key={member._id || member.id} member={member} />
+          {members.map((member, index) => (
+            <div key={member._id || member.id} className="animate-fade-in" style={{ animationDelay: `${index * 75}ms` }}>
+              <MemberCard member={member} />
+            </div>
           ))}
         </div>
       )}
