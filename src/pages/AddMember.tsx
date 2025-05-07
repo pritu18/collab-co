@@ -1,6 +1,8 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +14,7 @@ import { membersApi } from '@/services/api';
 const AddMemberPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   
   // State for form fields
   const [formData, setFormData] = useState({
@@ -22,7 +25,31 @@ const AddMemberPage = () => {
   });
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Set up mutation for form submission
+  const addMemberMutation = useMutation({
+    mutationFn: (submitData: FormData) => membersApi.addMember(submitData),
+    onSuccess: () => {
+      // Invalidate and refetch members list
+      queryClient.invalidateQueries({ queryKey: ['members'] });
+      
+      toast({
+        title: "Success!",
+        description: "Team member added successfully.",
+      });
+      
+      // Redirect to members list
+      navigate('/view-members');
+    },
+    onError: (error) => {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add team member. Please try again.",
+        variant: "destructive",
+      });
+    }
+  });
   
   // Handle form input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -62,46 +89,23 @@ const AddMemberPage = () => {
       return;
     }
     
-    setIsSubmitting(true);
+    // Create FormData object for file upload
+    const submitData = new FormData();
+    submitData.append('name', formData.name);
+    submitData.append('role', formData.role);
+    submitData.append('email', formData.email);
+    submitData.append('details', formData.details);
     
-    try {
-      // Create FormData object for file upload
-      const submitData = new FormData();
-      submitData.append('name', formData.name);
-      submitData.append('role', formData.role);
-      submitData.append('email', formData.email);
-      submitData.append('details', formData.details);
-      
-      if (profileImage) {
-        submitData.append('profileImage', profileImage);
-      }
-      
-      // Send form data to backend
-      const result = await membersApi.addMember(submitData);
-      
-      if (result) {
-        toast({
-          title: "Success!",
-          description: "Team member added successfully.",
-        });
-        
-        // Redirect to members list
-        navigate('/view-members');
-      }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      toast({
-        title: "Error",
-        description: "Failed to add team member. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
+    if (profileImage) {
+      submitData.append('profileImage', profileImage);
     }
+    
+    // Execute mutation
+    addMemberMutation.mutate(submitData);
   };
   
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto animate-fade-in">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl text-team-primary">Add New Team Member</CardTitle>
@@ -110,42 +114,33 @@ const AddMemberPage = () => {
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-6">
-              <div className="grid gap-3">
-                <Label htmlFor="name">Full Name *</Label>
-                <Input 
-                  id="name"
-                  name="name" 
-                  placeholder="Enter full name" 
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <FormField
+                label="Full Name *"
+                name="name"
+                placeholder="Enter full name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
               
-              <div className="grid gap-3">
-                <Label htmlFor="role">Role *</Label>
-                <Input 
-                  id="role"
-                  name="role" 
-                  placeholder="e.g., Team Lead, Developer, Designer" 
-                  value={formData.role}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <FormField
+                label="Role *"
+                name="role"
+                placeholder="e.g., Team Lead, Developer, Designer"
+                value={formData.role}
+                onChange={handleChange}
+                required
+              />
               
-              <div className="grid gap-3">
-                <Label htmlFor="email">Email *</Label>
-                <Input 
-                  id="email"
-                  name="email" 
-                  type="email"
-                  placeholder="email@example.com" 
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              <FormField
+                label="Email *"
+                name="email"
+                type="email"
+                placeholder="email@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
               
               <div className="grid gap-3">
                 <Label htmlFor="details">Additional Details</Label>
@@ -194,10 +189,10 @@ const AddMemberPage = () => {
                 </Button>
                 <Button 
                   type="submit"
-                  className="bg-team-primary hover:bg-team-secondary"
-                  disabled={isSubmitting}
+                  className="bg-team-primary hover:bg-team-secondary transition-colors duration-300"
+                  disabled={addMemberMutation.isPending}
                 >
-                  {isSubmitting ? 'Adding Member...' : 'Add Member'}
+                  {addMemberMutation.isPending ? 'Adding Member...' : 'Add Member'}
                 </Button>
               </div>
             </div>
@@ -207,5 +202,39 @@ const AddMemberPage = () => {
     </div>
   );
 };
+
+// Form field component to reduce repetition
+interface FormFieldProps {
+  label: string;
+  name: string;
+  placeholder: string;
+  value: string;
+  type?: string;
+  required?: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const FormField: React.FC<FormFieldProps> = ({
+  label,
+  name,
+  placeholder,
+  value,
+  type = "text",
+  required = false,
+  onChange
+}) => (
+  <div className="grid gap-3">
+    <Label htmlFor={name}>{label}</Label>
+    <Input 
+      id={name}
+      name={name}
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      required={required}
+    />
+  </div>
+);
 
 export default AddMemberPage;

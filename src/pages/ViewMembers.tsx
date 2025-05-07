@@ -12,13 +12,15 @@ const ViewMembersPage = () => {
   const { data: members, isLoading, error } = useQuery({
     queryKey: ['members'],
     queryFn: membersApi.getAllMembers,
-    onError: (err) => {
-      console.error('Error fetching members:', err);
-      toast({
-        title: 'Error',
-        description: 'Failed to load team members.',
-        variant: 'destructive',
-      });
+    onSettled: (data, error) => {
+      if (error) {
+        console.error('Error fetching members:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load team members.',
+          variant: 'destructive',
+        });
+      }
     }
   });
   
