@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { membersApi, Member } from '@/services/api';
+import { supabaseUrl } from '@/lib/supabase';
 
 const MemberDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -47,9 +48,9 @@ const MemberDetailsPage = () => {
     fetchMemberDetails();
   }, [id, toast]);
   
-  // Image URL for the member's profile image
+  // Image URL for the member's profile image using Supabase URL
   const imageUrl = member?.profileImage 
-    ? `http://localhost:5000/uploads/${member.profileImage}`
+    ? `${supabaseUrl}/storage/v1/object/public/member-photos/${member.profileImage}`
     : '/placeholder.svg';
   
   return (

@@ -4,19 +4,20 @@ import { Link } from 'react-router-dom';
 import { Member } from '@/services/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { supabaseUrl } from '@/lib/supabase';
 
 interface MemberCardProps {
   member: Member;
 }
 
 const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
-  // Default image if no profile image is available
+  // Get image URL from Supabase if available, otherwise use placeholder
   const imageUrl = member.profileImage 
-    ? `http://localhost:5000/uploads/${member.profileImage}`
+    ? `${supabaseUrl}/storage/v1/object/public/member-photos/${member.profileImage}`
     : '/placeholder.svg';
     
   // Use either _id or id depending on what the API returns
-  const memberId = member._id || member.id;
+  const memberId = member.id || member._id;
 
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-team-primary/20 flex flex-col transform hover:-translate-y-1">
